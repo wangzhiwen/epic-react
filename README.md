@@ -1234,6 +1234,470 @@
       
       
 >组合 vs 继承
+    
+    React有一个非常强大的组合模型，在代码重用方面，我们强烈推荐使用组合，不
+    推荐使用继承。
+    
+    本节我们将讨论一些，React入门级新手常常遇到的问题，并展示我们如何用组合
+    来处理这些问题
+    
+    一些组件，事先不清楚他们的子节点。这对Sidebar/Dialog之类的容器类的组件很
+    常见。
+    
+    我们推荐这类组件使用特殊的children prop来直接传递子元素。
+    function FancyBorder(props) {
+      return (
+        <div className={'FancyBorder FancyBorder-' + props.color}>
+          {props.children}
+        </div>
+      );
+    }
+    
+    这使得在JSX中其他的组件可以传递任意的子节点给这些子节点
+    function WelcomeDialog() {
+      return (
+        <FancyBorder color="blue">
+          <h1 className="Dialog-title">
+            Welcome
+          </h1>
+          <p className="Dialog-message">
+            Thank you for visiting our spacecraft!
+          </p>
+        </FancyBorder>
+      );
+    }
+    
+    所有嵌套在FancyBorder标签中的组件都将作为他的一个children prop。
+    
+    经管这不是很常用，但是有很多时候你需要更多的接入点。这种情况下，你可能提
+    你自己的方式，而不是使用children。
+    function SplitPane(props) {
+      return (
+        <div className="SplitPane">
+          <div className="SplitPane-left">
+            {props.left}
+          </div>
+          <div className="SplitPane-right">
+            {props.right}
+          </div>
+        </div>
+      );
+    }
+    
+    function App() {
+      return (
+        <SplitPane
+          left={
+            <Contacts />
+          }
+          right={
+            <Chat />
+          } />
+      );
+    }
+    
+    看到上面的代码中，<Concats /> 和 <Chat />只是一个object，所以你可以向传递
+    任何其他数据一样传递他们。
+    
+    有时我们会考虑到一些特殊情况，如WelcomeDialog就是Dialog的一个特例。这
+    也可以通过组合来处理，一个特例的组件渲染出一个更加通用的配置。
+    
+    function Dialog(props) {
+      return (
+        <FancyBorder color="blue">
+          <h1 className="Dialog-title">
+            {props.title}
+          </h1>
+          <p className="Dialog-message">
+            {props.message}
+          </p>
+        </FancyBorder>
+      );
+    }
+    
+    function WelcomeDialog() {
+      return (
+        <Dialog
+          title="Welcome"
+          message="Thank you for visiting our spacecraft!" />
+      );
+    }
+    
+    通过class来定义的组件使用组合也是非常方便的
+    function Dialog(props) {
+      return (
+        <FancyBorder color="blue">
+          <h1 className="Dialog-title">
+            {props.title}
+          </h1>
+          <p className="Dialog-message">
+            {props.message}
+          </p>
+          {props.children}
+        </FancyBorder>
+      );
+    }
+    
+    class SignUpDialog extends React.Component {
+      constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSignUp = this.handleSignUp.bind(this);
+        this.state = {login: ''};
+      }
+    
+      render() {
+        return (
+          <Dialog title="Mars Exploration Program"
+                  message="How should we refer to you?">
+            <input value={this.state.login}
+                   onChange={this.handleChange} />
+            <button onClick={this.handleSignUp}>
+              Sign Me Up!
+            </button>
+          </Dialog>
+        );
+      }
+    
+      handleChange(e) {
+        this.setState({login: e.target.value});
+      }
+    
+      handleSignUp() {
+        alert(`Welcome aboard, ${this.state.login}!`);
+      }
+    }
+
+    在Facebook中，成千上万的组件，没有找到继承的用例，Props和组合给你带来了
+    组合组件的很多便利。你始终要基础通过Props可以传递任何你想要传递的参数，包括
+    原始数值，React 元素，或者是一个function
+
+     如果你希望重用一个非UI的功能，我们推荐使用 import 导入这个功能，而非继承。
+     
+>React 的思考
+
+    按照什么标准来决定是否该将某一块内容定义成一个组件：单一责任制原则
+    
+    根据划分来定义应用的层次结构
+      FilterableProductTable
+          SearchBar
+          ProductTable
+              ProductCategoryRow
+              ProductRow
+    大概的结构就是这样了
+    
+    下面开始构建这个应用
+    html部分
+    <div id="container">
+      <!-- This element's contents will be replaced with your component. -->
+    </div>
+    
+    css部分
+    body{
+      padding: 5px;
+    }
+    
+    Babel部分
+    class ProductCategoryRow extend React.Component {
+      render() {
+        return (
+          <tr><th colSpan="2">{ this.props.category }</th></tr>
+        )
+      }
+    }
+    
+    class ProductCategoryRow extend React.Component {
+      render() {
+        var name = this.props.product.stocked 
+        ?
+        this.props.product.name
+        :
+        <span style={{ color: 'red' }}>
+          { this.props.product.name }
+        </span>;
+          
+        return(
+          <tr>
+            <td>{ name }</td>
+            <td>{ this.props.product.price }</td>
+          </tr>
+        )
+      };
+    }
+    
+    class ProductTable extends React.Component {
+      render() {
+        var rows = [];
+        var lastCategory = null;
+        this.props.products.forEach(function(product) {
+          if (product.category !== lastCategory) {
+            rows.push(<ProductCategoryRow category={product.category} key={product.category} />);
+          }
+          rows.push(<ProductRow product={product} key={product.name} />);
+          lastCategory = product.category;
+        });
+        return (
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>{rows}</tbody>
+          </table>
+        );
+      }
+    }
+    
+    class SearchBar extends React.Component {
+      render() {
+        return (
+          <form>
+            <input type="text" placeholder="Search..." />
+            <p>
+              <input type="checkbox" />
+              {' '}
+              Only show products in stock
+            </p>
+          </form>
+        );
+      }
+    }
+    
+    class FilterableProductTable extends React.Component {
+      render() {
+        return (
+          <div>
+            <SearchBar />
+            <ProductTable products={this.props.products} />
+          </div>
+        );
+      }
+    }
+    
+    var PRODUCTS = [
+      {category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football'},
+      {category: 'Sporting Goods', price: '$9.99', stocked: true, name: 'Baseball'},
+      {category: 'Sporting Goods', price: '$29.99', stocked: false, name: 'Basketball'},
+      {category: 'Electronics', price: '$99.99', stocked: true, name: 'iPod Touch'},
+      {category: 'Electronics', price: '$399.99', stocked: false, name: 'iPhone 5'},
+      {category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
+    ];
+    
+    
+    ReactDOM.render(
+      <FilterableProductTable products={PRODUCTS} />,
+      document.getElementById('container')
+    );
+    
+    注意这里的构建顺序，由小到大。由于是一个静态的构建过程，所以不需要考虑交互性。
+    如果你熟悉State，你会发现这里没有用到State，State是为了交互性而生的。这里
+    的数据流都是父组件单向的传递给子组件，所以不需要State.
+    
+    关于构建顺序，由大到小或者由小到大其实差不多，你自己决定。通常编写小的项目
+    都是由大到小，编写大的项目都是由小到大。
+    
+    上面的例子只不过是一个静态模型，通常构建应用的时候，首先应该完成静态模型的
+    建设，然后在此基础上实现组件之间的交互效果。
+    
+    下面开始实现交互效果
+    实现交互效果的第一步是找到变化状态的最小集合
+    
+    我们的数据
+      1：原始的产品列表
+      2：用户输入的关键字
+      3：复选框
+      4：过滤之后的产品列表
+      
+     关于这些数据，思考三个问题：
+      1：是否由父组件通过prop属性传入的？ 如果是，那么它不属于State
+      2：它是否随着时间变化？ 如果不变，那么它不属于State
+      3：你是否可以通过其他的State属性或者你组件内部的Props计算出它？ 如果是，
+          那么它不属于State
+          
+      ·原始的产品列表时通过props传递的，所以它不属于State；
+      ·用户输入的关键字和复选框看起来像State的属性，因为它会随着时间变化，并且
+      使用其他的State和组件内部的Props无法计算出它的值
+      ·过滤之后的数据可以通过原始产品列表；以及用户输入的关键字、复选框等数据
+      计算出来，所以它也不属于State.
+      
+      最后我们得出结果，用户输入的值和复选框的值会作为State的属性。
+      
+      下一步就是确定你的State将住在哪里？ 
+      
+      由于React是单向数据流，即单向数据绑定。所以可能无法马上明确哪个组件由什么状态。
+      这对React新手来说是一个很有挑战性的部分。
+      
+      所以接下来的步骤让我们搞定这一切。
+      
+      针对你的应用中的所有碎片：
+        1：找到所有渲染这些状态的组件；
+        2：找到一个第一步组件结果的共同的父组件；
+        3：或者是2中找到的组件，或者另一个层级关系比较高的组件应该拥有这个状态
+        4：如果你不能找到一个拥有这个state的组件，那么就为了共享State需要新创建
+        一个组件，并把它添加在共同拥有者的上层的合适位置。
+        
+       结合我们的应用程序：
+        ProductTable 需要基于State过滤产品列表，SearchBar 需要展现用户的输入和复选框
+        这两个组件的共同祖先是FilterableProductTable
+        
+        所以我们就让状态入住FilterableProductTable。首先在构造方法中添加实例属性
+        this.state = {filterText: '', inStockOnly: false} ，然后通过Props将filterText和
+        inStockOnly传递给ProductTable 和 SearchBar ，最后使用传递进来的值在
+        ProductTable 中实现产品过滤；
+        
+        
+        class ProductCategoryRow extends React.Component {
+          render() {
+            return (<tr><th colSpan="2">{this.props.category}</th></tr>);
+          }
+        }
+        
+        class ProductRow extends React.Component {
+          render() {
+            var name = this.props.product.stocked ?
+              this.props.product.name :
+              <span style={{color: 'red'}}>
+                {this.props.product.name}
+              </span>;
+            return (
+              <tr>
+                <td>{name}</td>
+                <td>{this.props.product.price}</td>
+              </tr>
+            );
+          }
+        }
+        
+        class ProductTable extends React.Component {
+          render() {
+            var rows = [];
+            var lastCategory = null;
+            //这段代码就是过滤
+            this.props.products.forEach((product) => {
+              if (product.name.indexOf(this.props.filterText) === -1 || (!product.stocked && this.props.inStockOnly)) {
+                return;
+              }
+              if (product.category !== lastCategory) {
+                rows.push(<ProductCategoryRow category={product.category} key={product.category} />);
+              }
+              rows.push(<ProductRow product={product} key={product.name} />);
+              lastCategory = product.category;
+            });
+            return (
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                  </tr>
+                </thead>
+                <tbody>{rows}</tbody>
+              </table>
+            );
+          }
+        }
+        
+        class SearchBar extends React.Component {
+          constructor(props) {
+            super(props);
+            this.handleChange = this.handleChange.bind(this);
+          }
+          
+          handleChange() {
+            this.props.onUserInput(
+              this.filterTextInput.value,
+              this.inStockOnlyInput.checked
+            );
+          }
+          
+          render() {
+            return (
+              <form>
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={this.props.filterText}
+                  ref={(input) => this.filterTextInput = input}
+                  onChange={this.handleChange}
+                />
+                <p>
+                  <input
+                    type="checkbox"
+                    checked={this.props.inStockOnly}
+                    ref={(input) => this.inStockOnlyInput = input}
+                    onChange={this.handleChange}
+                  />
+                  {' '}
+                  Only show products in stock
+                </p>
+              </form>
+            );
+          }
+        }
+        
+        class FilterableProductTable extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              filterText: '',
+              inStockOnly: false
+            };
+            
+            this.handleUserInput = this.handleUserInput.bind(this);
+          }
+        
+          handleUserInput(filterText, inStockOnly) {
+            this.setState({
+              filterText: filterText,
+              inStockOnly: inStockOnly
+            });
+          }
+        
+          render() {
+            return (
+              <div>
+                <SearchBar
+                  filterText={this.state.filterText}
+                  inStockOnly={this.state.inStockOnly}
+                  onUserInput={this.handleUserInput}
+                />
+                <ProductTable
+                  products={this.props.products}
+                  filterText={this.state.filterText}
+                  inStockOnly={this.state.inStockOnly}
+                />
+              </div>
+            );
+          }
+        }
+        
+        
+        var PRODUCTS = [
+          {category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football'},
+          {category: 'Sporting Goods', price: '$9.99', stocked: true, name: 'Baseball'},
+          {category: 'Sporting Goods', price: '$29.99', stocked: false, name: 'Basketball'},
+          {category: 'Electronics', price: '$99.99', stocked: true, name: 'iPod Touch'},
+          {category: 'Electronics', price: '$399.99', stocked: false, name: 'iPhone 5'},
+          {category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
+        ];
+        
+        ReactDOM.render(
+          <FilterableProductTable products={PRODUCTS} />,
+          document.getElementById('container')
+        );
+      
+      说的再明确一点就是父组件给子组件传递了一个回调函数，在子组件的某个事件
+      发生的时候触发了这个回调函数，回调函数中使用了setState()修改了State的值，
+      从而又激发了React中的单向数据传递，导致了其子组件的变化。
+      
+      听起来有些复杂，说白了也就是几行代码。这样就实现了双向数据绑定
+      
+      
+      入门教程到此结束
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
-
+     
+    
