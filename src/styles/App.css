@@ -50,14 +50,13 @@ li{
 }
 .index .header{
   height:64px;
-  line-height: 64px;
-  padding:0 15px;
-  color:white;
-  background-color: #324057;
-  border-top: 2px solid #324057;
-  border-left: 2px solid #324057;
-  border-left: 2px solid #324057;
-  border-top-left-radius: 2px;
+  --line-height: 64px;
+  --padding:0 15px;
+  --background-color: #324057;
+  --border-top: 2px solid #324057;
+  --border-left: 2px solid #324057;
+  --border-left: 2px solid #324057;
+  --border-top-left-radius: 2px;
 }
 .index .content{
   height: 750px;
@@ -175,3 +174,6 @@ li{
   background-color: #bbb;
   /*color: #20a0ff;*/
 }
+
+/* 上部导航的样式设置 */
+/************************************************************************************/

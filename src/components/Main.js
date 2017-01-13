@@ -5,15 +5,21 @@ import React from 'react';
 
 import {Accordion, AccordionItem} from 'react-sanfona';
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import {deepOrange500} from 'material-ui/styles/colors';
-const muiTheme = getMuiTheme({
-  palette: {
-    accent1Color: deepOrange500,
-  },
-});
-import RaisedButton from 'material-ui/RaisedButton';
+// 使用material-ui定义的组件必须包括在这个标签中 此标签中只能放一个子ReactElement
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+//自定义表格
+import TableExampleSimple from './TableExampleSimple';
+import TabsExampleSimple from './TabsExampleSimple';
+
+//自定义AppBar
+import AppBarExampleComposition from './AppBarExampleComposition';
+
+//自定义左侧导航1
+import ListExampleNested from './ListExampleNested';
+
 // let yeomanImage = require('../images/yeoman.png');
 
 class AppComponent extends React.Component {
@@ -92,72 +98,49 @@ class AppComponent extends React.Component {
     return (
       <div className="index">
         {/*网页头部*/}
-        <div className="header">header</div>
+        <MuiThemeProvider>
+          <AppBarExampleComposition />
+        </MuiThemeProvider>
+        {/*<div className="header">*/}
+          {/**/}
+        {/*</div>*/}
         {/*网页中部*/}
         <div className="content">
           {/*中部左侧导航*/}
           <div className="left">
-            <Accordion onChange={ this.onChange }>
-              {this.state.sidebardata.map(function(item) {
-                return (
-                  <AccordionItem
-                    onExpand={ this.expand }
-                    onClose={ this.close }
-                    className="cn"
-                    bodyClassName="bodycn"
-                    expandedClassName="expandedcn"
-                    title={ item.text }
-                    slug={ item.id }
-                    key={ item.id}>
-                    {item.subitems.map(function(subitem) {
-                      return (
-                       <div key={ subitem.id } onClick={ this.clickhandle }>{ subitem.text }</div>
-                      )
-                    },this)}
-                  </AccordionItem>
-                );
-              }, this)}
-              {/*
-              <AccordionItem
-                onExpand={ this.expand }
-                onClose={ this.close }
-                onClick={ this.clickhandle }
-                className="cn"
-                bodyClassName="bodycn"
-                expandedClassName="expandedcn"
-                title={'导航一'}
-                slug={'1'}
-                key={'1'}>
-                <div>
-                  {'轮播组件一'}
-                </div>
-                <div>
-                  {'轮播组件二'}
-                </div>
-              </AccordionItem>
-              <AccordionItem
-                onExpand={ this.expand }
-                onClose={ this.close }
-                onClick={ this.clickhandle }
-                className="cn"
-                bodyClassName="bodycn"
-                expandedClassName="expandedcn"
-                title={'导航二'}
-                slug={'2'}
-                key={'2'}>
-                <div>
-                  {'表单组件'}
-                </div>
-                <div>
-                  {'表格组件'}
-                </div>
-              </AccordionItem>
-               */}
-            </Accordion>
+            <MuiThemeProvider>
+              <ListExampleNested></ListExampleNested>
+            </MuiThemeProvider>
+            {/*<Accordion onChange={ this.onChange }>*/}
+              {/*{this.state.sidebardata.map(function(item) {*/}
+                {/*return (*/}
+                  {/*<AccordionItem*/}
+                    {/*onExpand={ this.expand }*/}
+                    {/*onClose={ this.close }*/}
+                    {/*className="cn"*/}
+                    {/*bodyClassName="bodycn"*/}
+                    {/*expandedClassName="expandedcn"*/}
+                    {/*title={ item.text }*/}
+                    {/*slug={ item.id }*/}
+                    {/*key={ item.id}>*/}
+                    {/*{item.subitems.map(function(subitem) {*/}
+                      {/*return (*/}
+                       {/*<div key={ subitem.id } onClick={ this.clickhandle }>{ subitem.text }</div>*/}
+                      {/*)*/}
+                    {/*},this)}*/}
+                  {/*</AccordionItem>*/}
+                {/*);*/}
+              {/*}, this)}*/}
+            {/*</Accordion>*/}
           </div>
           {/*中部右侧内容*/}
           <div className="right">
-            <RaisedButton label="Default" />
+            {/*黑色主题*/}
+            {/*<MuiThemeProvider  muiTheme={getMuiTheme(darkBaseTheme)}>*/}
+            {/*默认主题*/}
+            <MuiThemeProvider>
+              <TabsExampleSimple />
+            </MuiThemeProvider>
           </div>
         </div>
         {/*网页脚部*/}
