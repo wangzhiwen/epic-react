@@ -43,7 +43,8 @@ class AppComponent extends React.Component {
             <SideBar leftoff={this.state.sidebarleftoff} />
           </div>
           <div className="right">
-
+            {/* add this */}
+            {this.props.children}
           </div>
         </div>
         {/*网页脚部*/}

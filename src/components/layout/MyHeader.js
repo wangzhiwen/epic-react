@@ -9,6 +9,8 @@ import React from 'react';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 
+import NavLink from '../link/NavLink'
+
 class MyHeader extends React.Component{
 
   //构造函数
@@ -20,11 +22,17 @@ class MyHeader extends React.Component{
 
     //给方法绑定实例
     this.toggleSidebar = this.toggleSidebar.bind(this);
+
+    this.gotoHelp = this.gotoHelp.bind(this);
   }
 
   //定义实例方法
   toggleSidebar() {
     this.props.toggleSideBar();
+  }
+
+  gotoHelp() {
+    alert(123);
   }
 
   //渲染方法
@@ -41,32 +49,18 @@ class MyHeader extends React.Component{
         </div>
         <div className="rightBtns">
           <div>
-            <NavDropdown pullRight eventKey={3} title="我的工作台" id="basic-nav-dropdown3">
-              <MenuItem eventKey={3.1}>产品中心</MenuItem>
-              <MenuItem eventKey={3.2}>客户中心</MenuItem>
+            <NavDropdown pullRight eventKey={1} title="我的工作台" id="basic-nav-dropdown3">
+              <MenuItem eventKey={1.1}>产品中心</MenuItem>
+              <MenuItem eventKey={1.2}>客户中心</MenuItem>
               <MenuItem divider />
-              <MenuItem eventKey={3.3}>帮助文档</MenuItem>
+              <MenuItem eventKey={1.3} onClick={this.gotoHelp}>帮助文档</MenuItem>
             </NavDropdown>
           </div>
           <div>
-            <NavDropdown pullRight eventKey={3} title="帮助中心" id="basic-nav-dropdown4">
-              <MenuItem eventKey={3.1}>产品帮助</MenuItem>
-              <MenuItem eventKey={3.2}>账户帮助</MenuItem>
-              <MenuItem eventKey={3.3}>操作手册</MenuItem>
-              <MenuItem divider />
-              <MenuItem eventKey={3.3}>自助服务</MenuItem>
-            </NavDropdown>
+            <NavLink activeStyle={{ color: 'red' }} to="/help/production">帮助中心</NavLink>
           </div>
           <div>
-            <NavDropdown pullRight eventKey={3} title="关于我们" id="basic-nav-dropdown4">
-              <MenuItem eventKey={3.1}>企业文化</MenuItem>
-              <MenuItem eventKey={3.2}>组织架构</MenuItem>
-              <MenuItem divider />
-              <MenuItem eventKey={3.3}>公司荣誉</MenuItem>
-            </NavDropdown>
-          </div>
-          <div>
-            <a href="#">404页面</a>
+            <NavLink activeStyle={{ color: 'red' }} to="/about/address">关于我们</NavLink>
           </div>
         </div>
       </div>

@@ -1,0 +1,51 @@
+路由指南，这里有十几节的课程，按照课程一步一步操作，即可。地址如下
+https://github.com/reactjs/react-router-tutorial
+
+react-router 是一个强大的路由库，它建立在React之上。可以帮助你快速的实现屏幕切换和页面流转。并且保证展现的内容和地址栏的URL同步。
+
+为了说明路由的作用，我首先构建一个不带路由的小型应用。我们可能通篇使用ES2015相关的语法。
+
+import React from 'react'
+import { render } from 'react-dom'
+
+const About = React.createClass({/*...*/})
+const Inbox = React.createClass({/**/})
+const Home = React.createClass({/**/})
+
+const App = React.createClass({
+  getInitialState() {
+    return {
+      route: window.location.hash.substr(1)
+    }
+  },
+
+  componentDidMount() {
+    window.addEventListener('hashchange', () => {
+      this.setState({
+        route: window.location.hash.substr(1)
+      })
+    })
+  },
+
+  render() {
+    let Child
+    switch (this.state.route) {
+      case '/about' : Child = About; break;
+      case '/inbox' : Child = Inbox; break;
+      default : Child = Home;
+    }
+
+    return (
+      <div>
+        <h1>App</h1>
+        <ul>
+          <li><a href="#/about">About</a></li>
+          <li><a href="#/inbox">Inbox</a></li>
+        </ul>
+        <Child />
+      </div>
+    )
+  }
+})
+
+render(<App />, document.body)
