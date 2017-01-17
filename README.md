@@ -1969,3 +1969,52 @@
   
   material-ui的帮助文档：
   http://www.material-ui.com/#/
+
+
+-------------------------------------------------------------------------------------
+>下面了解一下react-route
+
+(https://github.com/ReactTraining/react-router)
+
+    它是一个为React而生的全面路由。他能保证你的ui和url同步。它有一个简单的API和
+    强大的功能，如懒加载、动态路由匹配、本地正确跳转定位。它是你制作URL的时候的
+    第一个想法。
+
+ **安装**
+    
+    npm install --save react-router
+
+**支持**
+
+    凡是能运行React的地方都可使用这个路由
+
+ **引用**
+ 
+    // 使用ES6 转换器如：babel
+    import { Router, Route, Link } from 'react-router'
+    
+    // 不使用ES6 转换器如：babel
+    var Router = require('react-router').Router
+    var Route = require('react-router').Route
+    var Link = require('react-router').Link
+
+    // 普通的引用方式
+    <script src="https://unpkg.com/react-router/umd/ReactRouter.min.js"></script>
+    你可以发现window.ReactRouter对象
+    
+    
+ **一个例子**
+
+    // 声明式路由配置 (你也可以懒加载这个配置, 你真正需要的是一个路由主线, 不需
+    要一次性的把整个路由加载进来).
+    render((
+      <Router history={browserHistory}>
+        <Route path="/" component={App}>
+          <Route path="about" component={About}/>
+          <Route path="users" component={Users}>
+            <Route path="/user/:userId" component={User}/>
+          </Route>
+          <Route path="*" component={NoMatch}/>
+        </Route>
+      </Router>
+    ), document.getElementById('root'))

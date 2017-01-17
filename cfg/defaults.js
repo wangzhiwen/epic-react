@@ -45,7 +45,8 @@ function getDefaultModules() {
         loader: 'style-loader!css-loader!stylus-loader'
       },
       {
-        test: /\.(png|jpg|gif|woff|woff2)$/,
+        // 在这里设置加载bootstrap字体文件，eof|ttf|otf
+        test: /\.(png|jpg|gif|woff|woff2|eot|ttf|otf)$/,
         loader: 'url-loader?limit=8192'
       },
       {

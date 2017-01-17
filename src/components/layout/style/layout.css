@@ -1,0 +1,110 @@
+/*********************上部 导航条样式******************/
+.header {
+  height: 60px;
+  line-height: 60px;
+  padding: 0px;
+  background-color: #222;
+}
+
+.header a{
+  color: #cccccc;
+}
+
+/***sidebar的控制器***/
+.sidebarHandler{
+  width: 60px;
+  height: 40px;
+  padding: 15px 15px;
+  cursor: pointer;
+  float: left;
+}
+.sidebarHandler li{
+  list-style: none;
+  wdith: 50;
+  height: 3px;
+  margin:5px auto;
+  background-color: white;
+}
+
+/*左侧按钮组*/
+.header .leftBtns{
+  float: left;
+}
+
+.header .leftBtns div{
+  display: inline-block;
+  padding-left: 15px;
+}
+
+/*右侧按钮组*/
+.header .rightBtns{
+  float: right;
+}
+.header .rightBtns div{
+  display: inline-block;
+  padding-right: 15px;
+}
+
+
+/*********************中部 内容区域**********************/
+.content {
+  height: 550px;
+}
+
+/***********中部 左侧导航条**********/
+.accordion{
+  height: 100%;
+  width: 300px;
+  height: 550px;
+  max-height: 550px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: rgba(150,150,150,1);
+  position: relative;
+  left: -300px;
+  transition: left .3s;
+  -moz-transition: left .3s;	/* Firefox 4 */
+  -webkit-transition: left .3s;	/* Safari 和 Chrome */
+  -o-transition: left .3s;	/* Opera */
+}
+
+.accordion .container {
+  margin:0px;
+  padding:0px;
+  width:300px;
+  height:40px;
+  line-height:40px;
+  background-color: rgba(150,150,150,1);
+  border: 1px solid #fff;
+  border-top:none;
+  overflow:hidden;
+
+  transition: height .3s;
+  -moz-transition: height .3s;	/* Firefox 4 */
+  -webkit-transition: height .3s;	/* Safari 和 Chrome */
+  -o-transition: height .3s;	/* Opera */
+}
+
+.accordion .container:hover{
+  background-color:#ABEAFE;
+}
+
+.accordion .container li {
+  margin: 0px;
+  list-style:none;
+  padding:0px 15px;
+  border: 1px solid rgba(255,255,255,1);
+  border-bottom:none;
+  background-color: rgba(221,221,221,1);
+}
+
+.accordion .container li:hover{
+  background-color: rgba(221,221,221,.5);
+}
+
+.accordion .container a {
+  display:block;
+  padding:0px 15px;
+  text-decoration:none;
+  color: white;
+}
